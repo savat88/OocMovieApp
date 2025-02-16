@@ -9,7 +9,9 @@ def clean_youtube_url(url):
 
 def get_video_url(video_url):
     try:
-        ydl_opts = {}
+        ydl_opts = {
+            'cookies': 'cookie.txt'  # เพิ่มการใช้งาน cookie.txt
+        }
         with YoutubeDL(ydl_opts) as ydl:
             info = ydl.extract_info(video_url, download=False)
             formats = info.get('formats', [])
