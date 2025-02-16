@@ -17,7 +17,7 @@ def get_video_url(video_url):
         ydl_opts = {
             'geo_bypass': True,  # ข้ามข้อจำกัดทางภูมิศาสตร์
             'user_agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',  # ตัวระบุผู้ใช้
-            'cookies': 'cookies.txt',  # ถ้าคุณมีคุกกี้สามารถใช้ไฟล์ cookies.txt
+            #'cookies': 'cookies.txt',  # ถ้าคุณมีคุกกี้สามารถใช้ไฟล์ cookies.txt
         }
         with YoutubeDL(ydl_opts) as ydl:
             info = ydl.extract_info(video_url, download=False)
