@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify
-import youtube_dl
+from yt_dlp import YoutubeDL
 
 app = Flask(__name__)
 
@@ -10,7 +10,7 @@ def clean_youtube_url(url):
 def get_video_url(video_url):
     try:
         ydl_opts = {}
-        with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+        with YoutubeDL(ydl_opts) as ydl:
             info = ydl.extract_info(video_url, download=False)
             formats = info.get('formats', [])
 
