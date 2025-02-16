@@ -13,17 +13,17 @@ def get_video_url(video_url):
         with YoutubeDL(ydl_opts) as ydl:
             info = ydl.extract_info(video_url, download=False)
             formats = info.get('formats', [])
-
+            
             # เลือกสตรีมที่มีทั้งเสียงและวิดีโอ (progressive)
             progressive_streams = [f for f in formats if f.get('acodec') != 'none' and f.get('vcodec') != 'none']
-
+            
             # เรียงลำดับสตรีมตามคุณภาพ (ความสูงของวิดีโอ)
             progressive_streams.sort(key=lambda x: x.get('height', 0), reverse=True)
 
             # เลือกสตรีมที่ดีที่สุด
             best_stream = progressive_streams[0] if progressive_streams else None
             return best_stream['url'] if best_stream else None
-
+    
     except Exception as e:
         print("เกิดข้อผิดพลาด:", e)
         return None
