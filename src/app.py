@@ -3,17 +3,29 @@ import requests
 
 app = Flask(__name__)
 
-@app.route('/proxy')
-def proxy():
-    url = "http://45.144.165.187:8080/playidtv1/12345/17715"  # เปลี่ยนเป็น URL ที่ต้องการ
-   # headers = {
-    #    "User-Agent": "Custom User-Agent"  # เปลี่ยนให้เป็นข้อความที่ไม่มีตัวอักษรพิเศษ
-  #  }
+m3u8_urls = [
+    "http://45.144.165.187:8080/playidtv1/12345/17237",
+    "http://45.144.165.187:8080/playidtv1/12345/37", 
+    "http://45.144.165.187:8080/playidtv1/12345/17788"
+    "http://45.144.165.187:8080/playidtv1/12345/18922"
+    "http://45.144.165.187:8080/playidtv1/12345/18833"
+    "http://45.144.165.187:8080/playidtv1/12345/11052"
+    "http://45.144.165.187:8080/playidtv1/12345/18669"
+    "http://45.144.165.187:8080/playidtv1/12345/9198.m3u8"
+    "http://45.144.165.187:8080/playidtv1/12345/84"
+    "http://45.144.165.187:8080/playidtv1/12345/15672"
+]
 
-    # หรือถ้าต้องการใช้ภาษาไทย, แนะนำให้ encode ข้อความเป็น utf-8
+@app.route('/proxy/<int:index>')
+def proxy(index):
+    if index < 0 or index >= len(m3u8_urls):
+        return "URL not found", 404
+    
+    url = m3u8_urls[index]
+
     headers = {
-         "User-Agent": "ไม่อนุญาตแกะลิงค์".encode('utf-8')
-     }
+        "User-Agent": "ไม่อนุญาตแกะลิงค์".encode('utf-8')
+    }
 
     response = requests.get(url, headers=headers, stream=True)
 
@@ -23,4 +35,4 @@ def proxy():
     )
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8080, debug=True)  # ใช้ host='0.0.0.0' และ port=8080
+    app.run(host='0.0.0.0', port=8080, debug=True)
