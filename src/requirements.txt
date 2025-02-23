@@ -1,5 +1,2 @@
 Flask
-yt-dlp
-pyngrok
-gunicorn
 requests
