@@ -1,42 +1,37 @@
-from flask import Flask, Response
+from flask import Flask, Response, request
 import requests
 
 app = Flask(__name__)
 
-m3u8_urls = [
-    "http://45.144.165.187:8080/playidtv1/12345/17237",
-    "http://45.144.165.187:8080/playidtv1/12345/37", 
-    "http://45.144.165.187:8080/playidtv1/12345/17788",
-    "http://45.144.165.187:8080/playidtv1/12345/18922",
-    "http://45.144.165.187:8080/playidtv1/12345/18833",
-    "http://45.144.165.187:8080/playidtv1/12345/11052",
-    "http://45.144.165.187:8080/playidtv1/12345/18669",
-    "http://45.144.165.187:8080/playidtv1/12345/9198.m3u8",
-    "http://45.144.165.187:8080/playidtv1/12345/84",
-    "http://45.144.165.187:8080/playidtv1/12345/15672",
-    "http://45.144.165.187:8080/playidtv1/12345/17715",
-    "http://45.144.165.187:8080/playidtv1/12345/17239",
-    "http://45.144.165.187:8080/playidtv1/12345/11041",
-    "http://45.144.165.187:8080/playidtv1/12345/17237"
-]
+@app.route('/play')  # เปลี่ยนเส้นทางจาก /proxy เป็น /play
+def play():
+    # รับพารามิเตอร์ stream_id
+    stream_id = request.args.get('stream_id')
+    if not stream_id:
+        return "กรุณาระบุ stream_id", 400
 
-@app.route('/proxy/<int:index>')
-def proxy(index):
-    if index < 0 or index >= len(m3u8_urls):
-        return "URL not found", 404
-    
-    url = m3u8_urls[index]
+    # ลิงก์สตรีมมิ่งจริง (ใช้ string formatting แบบ Python 2.7)
+    stream_url = "http://45.150.128.170:8080/live/playidtv1/12345/{0}.ts".format(stream_id)
 
+    # ตั้งค่า headers
     headers = {
-        "User-Agent": "ไม่อนุญาตแกะลิงค์".encode('utf-8')
+        "User-Agent": "Muslim Player",
+        "Accept": "*/*"
     }
 
-    response = requests.get(url, headers=headers, stream=True)
+    # ดึงข้อมูลสตรีมมิ่ง
+    try:
+        response = requests.get(stream_url, headers=headers, stream=True)
+        if response.status_code != 200:
+            return "ไม่สามารถเปิดสตรีมมิ่งได้", 500
 
-    return Response(
-        response.iter_content(chunk_size=1024),
-        content_type=response.headers.get('Content-Type', 'application/vnd.apple.mpegurl')
-    )
+        # ส่งข้อมูลสตรีมมิ่งไปยังผู้ใช้
+        return Response(
+            response.iter_content(chunk_size=1024),
+            content_type="video/mp2t"
+        )
+    except Exception as e:
+        return "เกิดข้อผิดพลาด: {0}".format(str(e)), 500
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8080, debug=True)
