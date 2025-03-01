@@ -3,7 +3,7 @@ import requests
 
 app = Flask(__name__)
 
-@app.route('/play')  # เปลี่ยนเส้นทางจาก /proxy เป็น /play
+@app.route('api/app')  # เปลี่ยนเส้นทางจาก /proxy เป็น /play
 def play():
     # รับพารามิเตอร์ stream_id
     stream_id = request.args.get('stream_id')
