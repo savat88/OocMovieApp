@@ -16,7 +16,8 @@ def play():
     # ตั้งค่า headers
     headers = {
         "User-Agent": "Muslim Player",
-        "Accept": "*/*"
+        "Accept": "*/*",
+        "Connection": "keep-alive"
     }
 
     # ดึงข้อมูลสตรีมมิ่ง
